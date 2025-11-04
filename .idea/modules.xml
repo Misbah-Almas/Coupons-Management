@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/monk commerce coupons management.iml" filepath="$PROJECT_DIR$/.idea/monk commerce coupons management.iml" />
       <module fileurl="file://$PROJECT_DIR$/monk-commerce-coupons-management/monk-commerce-coupons-management.iml" filepath="$PROJECT_DIR$/monk-commerce-coupons-management/monk-commerce-coupons-management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/monk_commerce_coupons_management.iml" filepath="$PROJECT_DIR$/.idea/monk_commerce_coupons_management.iml" />
     </modules>
   </component>
 </project>
