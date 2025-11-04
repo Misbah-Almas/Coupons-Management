@@ -1,5 +1,6 @@
 package com.monkcommercecoupons.management.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,14 @@ public class CartDTO {
     @Valid
     private List<CartItemDTO> items;
 
+    @JsonIgnore
     public double getTotalPrice() {
         return items.stream()
                 .mapToDouble(item -> item.getPrice() * item.getQuantity())
                 .sum();
     }
 
+    @JsonIgnore
     public int getTotalItems() {
         return items.stream()
                 .mapToInt(CartItemDTO::getQuantity)

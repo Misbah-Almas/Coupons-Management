@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.monkcommercecoupons.management.model.dto.CartDTO;
 import com.monkcommercecoupons.management.model.dto.CartItemDTO;
+import com.monkcommercecoupons.management.model.dto.CartRequest;
 import com.monkcommercecoupons.management.model.dto.CouponDTO;
 import com.monkcommercecoupons.management.model.enums.CouponType;
 import com.monkcommercecoupons.management.repository.CouponRepository;
@@ -62,7 +63,7 @@ class CouponControllerIntegrationTest {
                 .isActive(true)
                 .build();
 
-        mockMvc.perform(post("/api/v1/coupons")
+        mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isCreated())
@@ -86,7 +87,7 @@ class CouponControllerIntegrationTest {
                 .isActive(true)
                 .build();
 
-        mockMvc.perform(post("/api/v1/coupons")
+        mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isCreated())
@@ -122,7 +123,7 @@ class CouponControllerIntegrationTest {
                 .isActive(true)
                 .build();
 
-        mockMvc.perform(post("/api/v1/coupons")
+        mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isCreated())
@@ -143,12 +144,12 @@ class CouponControllerIntegrationTest {
                 .isActive(true)
                 .build();
 
-        mockMvc.perform(post("/api/v1/coupons")
+        mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/v1/coupons")
+        mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isConflict())
@@ -160,7 +161,7 @@ class CouponControllerIntegrationTest {
         createTestCoupon("SAVE10", CouponType.CART_WISE);
         createTestCoupon("PRODUCT20", CouponType.PRODUCT_WISE);
 
-        mockMvc.perform(get("/api/v1/coupons"))
+        mockMvc.perform(get("/coupons"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].code").exists())
@@ -173,7 +174,7 @@ class CouponControllerIntegrationTest {
         String response = result.getResponse().getContentAsString();
         Long couponId = objectMapper.readTree(response).get("id").asLong();
 
-        mockMvc.perform(get("/api/v1/coupons/" + couponId))
+        mockMvc.perform(get("/coupons/" + couponId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(couponId))
                 .andExpect(jsonPath("$.code").value("SAVE10"));
@@ -181,7 +182,7 @@ class CouponControllerIntegrationTest {
 
     @Test
     void getCouponById_NonExistingCoupon_ShouldReturn404() throws Exception {
-        mockMvc.perform(get("/api/v1/coupons/999"))
+        mockMvc.perform(get("/coupons/999"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(containsString("999")));
     }
@@ -190,15 +191,16 @@ class CouponControllerIntegrationTest {
     void updateCoupon_ExistingCoupon_ShouldReturn200() throws Exception {
         MvcResult result = createTestCoupon("SAVE10", CouponType.CART_WISE);
         String response = result.getResponse().getContentAsString();
-        Long couponId = objectMapper.readTree(response).get("id").asLong();
+        CouponDTO existingCoupon = objectMapper.readValue(response, CouponDTO.class);
+        Long couponId = existingCoupon.getId();
 
-        Map<String, Object> updateData = new HashMap<>();
-        updateData.put("description", "Updated description");
-        updateData.put("isActive", false);
+        // Update the existing coupon object
+        existingCoupon.setDescription("Updated description");
+        existingCoupon.setIsActive(false);
 
-        mockMvc.perform(put("/api/v1/coupons/" + couponId)
+        mockMvc.perform(put("/coupons/" + couponId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateData)))
+                        .content(objectMapper.writeValueAsString(existingCoupon)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(couponId))
                 .andExpect(jsonPath("$.isActive").value(false));
@@ -210,10 +212,10 @@ class CouponControllerIntegrationTest {
         String response = result.getResponse().getContentAsString();
         Long couponId = objectMapper.readTree(response).get("id").asLong();
 
-        mockMvc.perform(delete("/api/v1/coupons/" + couponId))
+        mockMvc.perform(delete("/coupons/" + couponId))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/v1/coupons/" + couponId))
+        mockMvc.perform(get("/coupons/" + couponId))
                 .andExpect(status().isNotFound());
     }
 
@@ -234,7 +236,7 @@ class CouponControllerIntegrationTest {
         Map<String, Object> request = new HashMap<>();
         request.put("cart", cart);
 
-        mockMvc.perform(post("/api/v1/applicable-coupons")
+        mockMvc.perform(post("/applicable-coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -262,7 +264,7 @@ class CouponControllerIntegrationTest {
         Map<String, Object> request = new HashMap<>();
         request.put("cart", cart);
 
-        mockMvc.perform(post("/api/v1/apply-coupon/" + couponId)
+        mockMvc.perform(post("/apply-coupon/" + couponId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -287,7 +289,7 @@ class CouponControllerIntegrationTest {
         Map<String, Object> request = new HashMap<>();
         request.put("cart", cart);
 
-        mockMvc.perform(post("/api/v1/apply-coupon/999")
+        mockMvc.perform(post("/apply-coupon/999")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound());
@@ -307,7 +309,7 @@ class CouponControllerIntegrationTest {
                 .isActive(true)
                 .build();
 
-        MvcResult result = mockMvc.perform(post("/api/v1/coupons")
+        MvcResult result = mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isCreated())
@@ -330,7 +332,7 @@ class CouponControllerIntegrationTest {
         Map<String, Object> request = new HashMap<>();
         request.put("cart", cart);
 
-        mockMvc.perform(post("/api/v1/apply-coupon/" + couponId)
+        mockMvc.perform(post("/apply-coupon/" + couponId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -358,7 +360,7 @@ class CouponControllerIntegrationTest {
                 .isActive(true)
                 .build();
 
-        return mockMvc.perform(post("/api/v1/coupons")
+        return mockMvc.perform(post("/coupons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(couponDTO)))
                 .andExpect(status().isCreated())

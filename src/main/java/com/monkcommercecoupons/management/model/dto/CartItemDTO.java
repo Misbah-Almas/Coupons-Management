@@ -1,5 +1,7 @@
 package com.monkcommercecoupons.management.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CartItemDTO {
 
     @NotNull(message = "Product ID is required")
@@ -31,6 +34,7 @@ public class CartItemDTO {
     @JsonProperty("total_discount")
     private Double totalDiscount;
 
+    @JsonIgnore
     public double getTotalPrice() {
         return price * quantity;
     }

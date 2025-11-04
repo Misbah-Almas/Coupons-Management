@@ -39,7 +39,7 @@ class CouponServiceTest {
     private BxGyService bxGyService;
 
     @InjectMocks
-    private CouponService couponService;
+    private CouponServiceImpl couponService;
 
     private ObjectMapper objectMapper;
 
