@@ -23,17 +23,12 @@ public class OpenAPIConfig {
         contact.setName("Monk Commerce Coupon Management Assignment");
         contact.setEmail("misbah.almas@hotmail.com");
 
-        License license = new License()
-                .name("MIT License")
-                .url("https://opensource.org/licenses/MIT");
-
         Info info = new Info()
                 .title("Coupons Management API")
                 .version("1.0.0")
                 .description("RESTful API for managing and applying discount coupons for an e-commerce platform. " +
                         "Supports cart-wise, product-wise, and BxGy (Buy X Get Y) coupon types.")
-                .contact(contact)
-                .license(license);
+                .contact(contact);
 
         return new OpenAPI()
                 .info(info)
