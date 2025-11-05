@@ -16,7 +16,7 @@ Hey there! This is a REST API I built for managing discount coupons in e-commerc
 ```bash
 # Grab the code
 git clone https://github.com/Misbah-Almas/Coupons-Management.git
-cd Coupons-Management
+cd Coupons-Management # Go to this project folder if not already in it.
 
 # Build it
 mvn clean install
@@ -25,13 +25,13 @@ mvn clean install
 mvn spring-boot:run
 
 # Check it out:
-# Swagger UI: http://localhost:8080/swagger-ui.html
-# H2 Console: http://localhost:8080/api/v1/h2-console
+ Swagger UI: http://localhost:8080/api/v1/swagger-ui.html
+ H2 Console: http://localhost:8080/api/v1/h2-console # on h2 console make sure the jdbc url is set to - jdbc:h2:mem:couponsdb
 ```
 
 ## What's Under the Hood
 
-- **Backend**: Spring Boot 3.5.7
+- **Backend**: Spring Boot 3.1.5
 - **Database**: H2 (in-memory)
 - **ORM**: Spring Data JPA with Hibernate
 - **Validation**: Spring Validation
@@ -428,8 +428,8 @@ The code is organized pretty straightforwardly - controllers handle requests, se
 ## Documentation
 
 Once you've got it running, check out:
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
-- **OpenAPI JSON**: http://localhost:8080/v3/api-docs
+- **Swagger UI**: http://localhost:8080/api/v1/swagger-ui.html
+- **OpenAPI JSON**: http://localhost:8080/api/v1/v3/api-docs
 
 ## Questions?
 
